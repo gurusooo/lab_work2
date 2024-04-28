@@ -26,7 +26,7 @@ public class Main {
         return points;
     }
 
-    public static int countRectangles(List<int[][]> rectangles, int x, int y) {
+    public static int countRectangles (List<int[][]> rectangles, int x, int y) {
         int count = 0;
         for (int [][] rec: rectangles) {
             if (rec[0][0] <= x && x < rec[1][0] && rec[0][1] <= y && y < rec[1][1])
@@ -42,7 +42,7 @@ public class Main {
         int m = scanner.nextInt();
         int[][] points = readP(scanner, m);
         StringBuilder res = new StringBuilder();
-        for(int point[] : points) {
+        for (int point[] : points) {
             int count = countRectangles(rectangles, point[0], point[1]);
             res.append(count).append(" ");
         }
