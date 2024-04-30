@@ -12,11 +12,11 @@ public class Main {
         return rectangles;
     }
 
-    public static int[][] generatePoints(int N, int p) {
+    public static int[][] generatePoints(int N, int pX, int pY) {
         int[][] points = new int[N][2];
         for (int i = 1; i <= N; i++) {
-            int x = (int) (Math.pow(p * i, 31) % (20 * N));
-            int y = (int) (Math.pow(p * i, 31) % (20 * N));
+            int x = (int) ((Math.pow(pX, 31) * i) % (20 * N));
+            int y = (int) ((Math.pow(pY, 31) * i) % (20 * N));
             points[i - 1][0] = x;
             points[i - 1][1] = y;
         }
@@ -35,22 +35,31 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int N = scanner.nextInt();
-        List<int[][]> rectangles = generateRectangles(N);
-        int p = 31;
-        int[][] points = generatePoints(N, p); 
-        long startDataPreparation = System.nanoTime();
-        long endDataPreparation = System.nanoTime();
-        long dataPreparationTime = (endDataPreparation - startDataPreparation) / 1_000_000; 
-        StringBuilder res = new StringBuilder();
-        for (int[] point : points) {
-            int count = countRectangles(rectangles, point[0], point[1]);
-            res.append(count).append(" ");
+        int pX = 27;
+        int pY = 36;
+        long totalDataPreparationTime = 0;
+        long totalCountRectanglesTime = 0;
+        int numIterations = 10;
+
+        for (int i = 0; i < numIterations; i++) {
+            long startDataPreparation = System.nanoTime();
+            List<int[][]> rectangles = generateRectangles(N);
+            int[][] points = generatePoints(N, pX, pY);
+            long endDataPreparation = System.nanoTime();
+            totalDataPreparationTime += (endDataPreparation - startDataPreparation);
+
+            long startCountRectangles = System.nanoTime();
+            for (int[] point : points) {
+                int count = countRectangles(rectangles, point[0], point[1]);
+            }
+            long endCountRectangles = System.nanoTime();
+            totalCountRectanglesTime += (endCountRectangles - startCountRectangles);
         }
-        long startProcessing = System.nanoTime();
-        long endProcessing = System.nanoTime();
-        long processingTime = (endProcessing - startProcessing) / 1_000_000; 
-        System.out.println("Data Preparation Time: " + dataPreparationTime + " ms");
-        System.out.println("Processing Time: " + processingTime + " ms");
-        System.out.println(res.toString().trim());
+
+        long averageDataPreparationTime = totalDataPreparationTime / numIterations;
+        long averageCountRectanglesTime = totalCountRectanglesTime / numIterations;
+
+        System.out.println("Average Data Preparation Time: " + averageDataPreparationTime + " ns");
+        System.out.println("Average Count Rectangles Time: " + averageCountRectanglesTime + " ns");
     }
 }
